@@ -1,13 +1,47 @@
-
-
 var Console = {
   controller: function() {
+    Console.History.init();
     this.eval = function(input) {
       console.log('eval', input);
+      var result;
+      try {
+        result = eval(input);
+      } catch (e) {
+        console.error(e);
+        result = e.message;
+      };
+
+      Console.History.list.push(new Console.Command(input, result));
     };
   },
   view: function(ctrl) {
-    return m.component(Console.Input, { eval: ctrl.eval });
+    return [m.component(Console.HistoryWidget),
+            m.component(Console.Input, { eval: ctrl.eval })];
+  }
+};
+
+Console.Command = function(command, outcome) {
+  this.input = m.prop(command);
+  this.result = m.prop(outcome);
+};
+
+Console.History = {
+  init: function() {
+          Console.History.list = [];
+        }
+};
+
+Console.HistoryWidget = {
+  controller: function() {},
+  view: function() {
+    return <div>
+              {
+                Console.History.list.map(function(command, index) {
+                  return [<div>{ command.input() }</div>,
+                          <div>{ command.result() }</div>]
+                })
+              }
+           </div>;
   }
 };
 
