@@ -1,21 +1,25 @@
 var Console = {
-  controller: function() {
-    Console.History.init();
-    this.eval = function(input) {
-      console.log('eval', input);
-      var result;
-      try {
-        result = eval(input);
-      } catch (e) {
-        console.error(e);
-        result = e.message;
-      };
-
-      Console.History.list.push(new Console.Command(input, result));
+  init: function() {
+    this.History = new ConsoleStorage();
+  },
+  eval: function(input) {
+    console.log('eval', input);
+    var result;
+    try {
+      result = eval(input);
+    } catch (e) {
+      console.error(e);
+      result = e.message;
     };
+
+    Console.History.add(new Console.Command(input, result));
+  },
+  controller: function() {
+    Console.init();
+    this.eval = Console.eval;
   },
   view: function(ctrl) {
-    return [m.component(Console.HistoryWidget),
+    return [m.component(Console.HistoryWidget, Console.History.get),
             m.component(Console.Input, { eval: ctrl.eval })];
   }
 };
@@ -25,18 +29,14 @@ Console.Command = function(command, outcome) {
   this.result = m.prop(outcome);
 };
 
-Console.History = {
-  init: function() {
-          Console.History.list = [];
-        }
-};
-
 Console.HistoryWidget = {
-  controller: function() {},
-  view: function() {
+  controller: function(provider) {
+    this.get = provider;
+  },
+  view: function(history) {
     return <div>
               {
-                Console.History.list.map(function(command, index) {
+                history.get().map(function(command, index) {
                   return [<div>{ command.input() }</div>,
                           <div>{ command.result() }</div>]
                 })
