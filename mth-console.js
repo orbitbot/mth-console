@@ -1,33 +1,33 @@
 var Console = {
-  init: function() {
-    this.History = new ConsoleStorage();
-  },
-  eval: function(input) {
-    var result;
-    try {
-      result = eval(input);
-    } catch (e) {
-      console.error(e);
-      result = e.message;
+  controller: function(args) {
+    function getArgOrDefault(key, deflt) {
+      if (args && args[key])
+        return (Object.prototype.toString.call(x) == '[object Function]') ? (new args[key])  : args[key];
+      else
+        return new deflt;
+    }
+
+    var history = getArgOrDefault('history', ConsoleStorage);
+    var evalImpl = getArgOrDefault('eval', Evaluator);
+
+    return {
+      historyProvider: history.get,
+      eval: function(input) {
+        var result = evalImpl(input);
+        history.add(new Console.Command(result));
+      }
     };
-
-    console.log('input, /* output, */ result', input, result);
-
-    Console.History.add(new Console.Command(input, result));
-  },
-  controller: function() {
-    Console.init();
-    this.eval = Console.eval;
   },
   view: function(ctrl) {
-    return [m.component(Console.HistoryWidget, Console.History.get),
+    return [m.component(Console.HistoryWidget, ctrl.historyProvider ),
             m.component(Console.Input, { eval: ctrl.eval })];
   }
 };
 
-Console.Command = function(command, outcome) {
-  this.input = m.prop(command);
-  this.result = m.prop(outcome);
+Console.Command = function(data) {
+  this.input = m.prop(data.input);
+  this.output = m.prop(data.output)
+  this.result = m.prop(data.result);
 };
 
 Console.HistoryWidget = {
@@ -113,4 +113,6 @@ Console.Input = {
   }
 };
 
+
+// m.mount(document.getElementById('consoleApp'), m.component(Console, {  }));
 m.mount(document.getElementById('consoleApp'), Console);
