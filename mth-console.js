@@ -3,7 +3,6 @@ var Console = {
     this.History = new ConsoleStorage();
   },
   eval: function(input) {
-    console.log('eval', input);
     var result;
     try {
       result = eval(input);
@@ -11,6 +10,8 @@ var Console = {
       console.error(e);
       result = e.message;
     };
+
+    console.log('input, /* output, */ result', input, result);
 
     Console.History.add(new Console.Command(input, result));
   },
@@ -34,7 +35,14 @@ Console.HistoryWidget = {
     this.get = provider;
   },
   view: function(history) {
-    return <div>
+    var parentStyle = {
+      boxSizing  : 'border-box',
+      padding    : '5px',
+      font       : '400 13px monospace',
+      overflowY  : 'auto'
+    };
+
+    return <div style={ parentStyle }>
               {
                 history.get().map(function(command, index) {
                   return [<div>{ command.input() }</div>,
