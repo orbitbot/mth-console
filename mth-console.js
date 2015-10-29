@@ -11,11 +11,11 @@ var Console = {
     var evalImpl = getArgOrDefault('eval', Evaluator);
 
     return {
-      historyProvider: history.get,
       eval: function(input) {
         var result = evalImpl(input);
         history.add(new Console.Command(result));
-      }
+      },
+      historyProvider: history.get
     };
   },
   view: function(ctrl) {
@@ -33,16 +33,16 @@ Console.Command = function(data) {
 Console.HistoryWidget = {
   controller: function(provider) {
     this.get = provider;
-  },
-  view: function(history) {
-    var parentStyle = {
+
+    this.parentStyle = {
       boxSizing  : 'border-box',
       padding    : '5px',
       font       : '400 13px monospace',
       overflowY  : 'auto'
     };
-
-    return <div style={ parentStyle }>
+  },
+  view: function(history) {
+    return <div style={ ctrl.parentStyle }>
               {
                 history.get().map(function(command, index) {
                   return [<div>{ command.input() }</div>,
@@ -63,15 +63,14 @@ Console.Input = {
         e.preventDefault();
       }
     };
-  },
-  view: function(ctrl) {
-    var parentStyle = {
+
+    this.parentStyle = {
       position   : 'relative',
       border     : '1px solid #888',
       background : '#fff'
     };
 
-    var childStyle = {
+    this.childStyle = {
       margin     : 0,
       outline    : 0,
       border     : 0,
@@ -82,12 +81,12 @@ Console.Input = {
       wordWrap   : 'break-word'
     };
 
-    var preStyle = Object.assign({
+    this.preStyle = Object.assign({
       display    : 'block',
       visibility : 'hidden'
     }, childStyle);
 
-    var textareaStyle = Object.assign({
+    this.textareaStyle = Object.assign({
       boxSizing : 'border-box',
       width     : '100%',
       height    : '100%',
@@ -97,14 +96,15 @@ Console.Input = {
       left      : '0',
       resize    : 'none'
     }, childStyle);
-
-    return <div id="console-input" style={ parentStyle }>
-              <pre style={ preStyle }>
+  },
+  view: function(ctrl) {
+    return <div id="console-input" style={ ctrl.parentStyle }>
+              <pre style={ ctrl.preStyle }>
                 <span textContent={ ctrl.input() } ></span>
                 <br />
               </pre>
               <textarea
-                style={ textareaStyle }
+                style={ ctrl.textareaStyle }
                 value={ ctrl.input() }
                 oninput={ m.withAttr('value', ctrl.input) }
                 onkeydown={ ctrl.exec.bind(ctrl) }>
