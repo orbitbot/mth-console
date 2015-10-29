@@ -32,7 +32,7 @@ Console.Command = function(data) {
 
 Console.HistoryWidget = {
   controller: function(provider) {
-    this.get = provider;
+    this.getEntries = provider;
 
     this.parentStyle = {
       boxSizing  : 'border-box',
@@ -41,10 +41,10 @@ Console.HistoryWidget = {
       overflowY  : 'auto'
     };
   },
-  view: function(history) {
+  view: function(ctrl) {
     return <div style={ ctrl.parentStyle }>
               {
-                history.get().map(function(command, index) {
+                ctrl.getEntries().map(function(command, index) {
                   return [<div>{ command.input() }</div>,
                           <div>{ command.result() }</div>]
                 })
@@ -84,7 +84,7 @@ Console.Input = {
     this.preStyle = Object.assign({
       display    : 'block',
       visibility : 'hidden'
-    }, childStyle);
+    }, this.childStyle);
 
     this.textareaStyle = Object.assign({
       boxSizing : 'border-box',
@@ -95,7 +95,7 @@ Console.Input = {
       top       : '0',
       left      : '0',
       resize    : 'none'
-    }, childStyle);
+    }, this.childStyle);
   },
   view: function(ctrl) {
     return <div id="console-input" style={ ctrl.parentStyle }>
