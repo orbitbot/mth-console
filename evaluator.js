@@ -17,7 +17,8 @@ var Evaluator = function() {
       }
     }
 
-    ['log', 'info', 'warn', 'error'].forEach(intercept);
+    // ['log', 'info', 'warn', 'error'].forEach(intercept);
+    ['log', 'warn', 'error'].forEach(intercept);
   }
 
   extendConsoleAPI();
@@ -33,7 +34,6 @@ var Evaluator = function() {
       result = e.message;
     };
 
-    console.log('input, output, result', input, logged, result);
     return {
       input  : input,
       output : logged,
