@@ -70,7 +70,7 @@ Console.Input = {
       background : '#fff'
     };
 
-    this.childStyle = {
+    var childStyle = {
       margin     : 0,
       outline    : 0,
       border     : 0,
@@ -81,21 +81,22 @@ Console.Input = {
       wordWrap   : 'break-word'
     };
 
-    this.preStyle = Object.assign({
-      display    : 'block',
-      visibility : 'hidden'
-    }, this.childStyle);
+    this.preStyle = JSON.parse(JSON.stringify(childStyle));
 
-    this.textareaStyle = Object.assign({
-      boxSizing : 'border-box',
-      width     : '100%',
-      height    : '100%',
-      overflow  : 'hidden',
-      position  : 'absolute',
-      top       : '0',
-      left      : '0',
-      resize    : 'none'
-    }, this.childStyle);
+    this.preStyle.display    = 'block';
+    this.preStyle.visibility = 'hidden';
+
+    this.textareaStyle = JSON.parse(JSON.stringify(childStyle));
+
+    this.textareaStyle.boxSizing = 'border-box';
+    this.textareaStyle.width     = '100%';
+    this.textareaStyle.height    = '100%';
+    this.textareaStyle.overflow  = 'hidden';
+    this.textareaStyle.position  = 'absolute';
+    this.textareaStyle.top       = '0';
+    this.textareaStyle.left      = '0';
+    this.textareaStyle.resize    = 'none';
+
   },
   view: function(ctrl) {
     return <div id="console-input" style={ ctrl.parentStyle }>
