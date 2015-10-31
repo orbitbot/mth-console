@@ -34,6 +34,13 @@ Console.HistoryWidget = {
   controller: function(provider) {
     this.getEntries = provider;
 
+    this.processsResult = function(res) {
+      if (typeof res === 'undefined')
+        return 'undefined';
+      else
+        return JSON.stringify(res);
+    };
+
     this.parentStyle = {
       boxSizing  : 'border-box',
       padding    : '5px',
@@ -45,8 +52,15 @@ Console.HistoryWidget = {
     return <div style={ ctrl.parentStyle }>
               {
                 ctrl.getEntries().map(function(command, index) {
-                  return [<div>{ command.input() }</div>,
-                          <div>{ command.result() }</div>]
+                  var output = command.output().map(function(el) {
+                    return (
+                      <div>{ el.args.join(' ') }</div>
+                    );
+                  });
+
+                  return [<div>{ command.input() }</div>]
+                          .concat(output)
+                          .concat([<div>{ ctrl.processsResult(command.result()) }</div>])
                 })
               }
            </div>;
@@ -58,8 +72,11 @@ Console.Input = {
     this.input = m.prop('');
     this.exec = function(e) {
       if (e.keyCode === 13 && !e.shiftKey) {
-        args.eval(this.input());
-        this.input('');
+        var input = this.input();
+        if (input !== '') {
+          args.eval(input);
+          this.input('');
+        }
         e.preventDefault();
       }
     };
