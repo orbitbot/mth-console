@@ -1,0 +1,19 @@
+{
+  "name": "mth-console",
+  "description": "Interactive Javascript console for web pages",
+  "main": "mth-console.js",
+  "authors": [
+    "Patrik Johnson <patrik@zebros.fi>"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/orbitbot/mth-console",
+  "moduleType": [],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

@@ -1,10 +1,10 @@
 var Console = {
   controller: function(args) {
-    function getArgOrDefault(key, deflt) {
+    function getArgOrDefault(key, Default) {
       if (args && args[key])
-        return (Object.prototype.toString.call(x) == '[object Function]') ? (new args[key])  : args[key];
+        return (Object.prototype.toString.call(args[key]) === '[object Function]') ? (new args[key]) : args[key];
       else
-        return new deflt;
+        return new Default;
     }
 
     var history = getArgOrDefault('history', ConsoleStorage);
@@ -15,7 +15,7 @@ var Console = {
         var result = evalImpl(input);
         history.add(new Console.Command(result));
       },
-      historyProvider: history.get
+      historyProvider: history.get,
     };
   },
   view: function(ctrl) {
@@ -131,6 +131,4 @@ Console.Input = {
   }
 };
 
-
-// m.mount(document.getElementById('consoleApp'), m.component(Console, {  }));
-m.mount(document.getElementById('consoleApp'), Console);
+m.mount(document.getElementById('console'), Console);
