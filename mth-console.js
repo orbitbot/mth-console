@@ -58,7 +58,7 @@ Console.HistoryWidget = {
                     );
                   });
 
-                  return [<div>{ command.input() }</div>]
+                  return [<pre style="margin:0">{ command.input() }</pre>]
                           .concat(output)
                           .concat([<div>{ ctrl.processsResult(command.result()) }</div>])
                 })
