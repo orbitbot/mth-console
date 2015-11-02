@@ -1,4 +1,4 @@
-var Evaluator = function() {
+var Evaluator = function() {  // eslint-disable-line no-unused-vars
   var logged = [];
 
   function extendConsoleAPI() {
@@ -9,12 +9,12 @@ var Evaluator = function() {
 
       console[method] = function() {
         logged.push({
-          type: method,
-          args: Array.prototype.slice.apply(arguments)
+          type : method,
+          args : Array.prototype.slice.apply(arguments),
         });
 
         original.apply(console, arguments);
-      }
+      };
     }
 
     // ['log', 'info', 'warn', 'error'].forEach(intercept);
@@ -28,16 +28,16 @@ var Evaluator = function() {
 
     var result;
     try {
-      result = eval(input);
-    } catch (e) {
-      console.error(e);
-      result = e.message;
-    };
+      result = eval(input);   // eslint-disable-line no-eval
+    } catch (err) {
+      console.error(err);
+      result = err.message;
+    }
 
     return {
       input  : input,
       output : logged,
-      result : result
+      result : result,
     };
   };
 };

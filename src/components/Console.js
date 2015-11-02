@@ -1,57 +1,57 @@
-var Console = {
-  controller: function(args) {
+var Console = {   // eslint-disable-line no-unused-vars
+  controller : function(args) {
     function getArgOrDefault(key, Default) {
       if (args && args[key])
         return (Object.prototype.toString.call(args[key]) === '[object Function]') ? (new args[key]) : args[key];
-      else
-        return new Default;
+
+      return new Default;
     }
 
     var history = getArgOrDefault('history', ConsoleStorage);
     var evalImpl = getArgOrDefault('eval', Evaluator);
 
     return {
-      eval: function(input) {
+      eval : function(input) {
         var result = evalImpl(input);
         history.add(new Console.Command(result));
       },
-      historyProvider: history.get,
+      historyProvider : history.get,
     };
   },
-  view: function(ctrl) {
+  view : function(ctrl) {
     return [m.component(Console.HistoryWidget, ctrl.historyProvider ),
-            m.component(Console.Input, { eval: ctrl.eval })];
-  }
+            m.component(Console.Input, { eval : ctrl.eval })];
+  },
 };
 
 Console.Command = function(data) {
-  this.input = m.prop(data.input);
-  this.output = m.prop(data.output)
+  this.input  = m.prop(data.input);
+  this.output = m.prop(data.output);
   this.result = m.prop(data.result);
 };
 
 Console.HistoryWidget = {
-  controller: function(provider) {
+  controller : function(provider) {
     this.getEntries = provider;
 
     this.processsResult = function(res) {
       if (typeof res === 'undefined')
         return 'undefined';
-      else
-        return JSON.stringify(res);
+
+      return JSON.stringify(res);
     };
 
     this.parentStyle = {
-      boxSizing  : 'border-box',
-      padding    : '5px',
-      font       : '400 13px monospace',
-      overflowY  : 'auto'
+      boxSizing : 'border-box',
+      padding   : '5px',
+      font      : '400 13px monospace',
+      overflowY : 'auto',
     };
   },
-  view: function(ctrl) {
-    return <div style={ ctrl.parentStyle }>
+  view : function(ctrl) {
+    return (<div style={ ctrl.parentStyle }>
               {
-                ctrl.getEntries().map(function(command, index) {
+                ctrl.getEntries().map(function(command) {
                   var output = command.output().map(function(el) {
                     return (
                       <div>{ el.args.join(' ') }</div>
@@ -60,31 +60,31 @@ Console.HistoryWidget = {
 
                   return [<pre style="margin:0">{ command.input() }</pre>]
                           .concat(output)
-                          .concat([<div>{ ctrl.processsResult(command.result()) }</div>])
+                          .concat([<div>{ ctrl.processsResult(command.result()) }</div>]);
                 })
               }
-           </div>;
-  }
+            </div>);
+  },
 };
 
 Console.Input = {
-  controller: function(args) {
+  controller : function(args) {
     this.input = m.prop('');
-    this.exec = function(e) {
-      if (e.keyCode === 13 && !e.shiftKey) {
+    this.exec = function(ev) {
+      if (ev.keyCode === 13 && !ev.shiftKey) {
         var input = this.input();
         if (input !== '') {
           args.eval(input);
           this.input('');
         }
-        e.preventDefault();
+        ev.preventDefault();
       }
     };
 
     this.parentStyle = {
       position   : 'relative',
       border     : '1px solid #888',
-      background : '#fff'
+      background : '#fff',
     };
 
     var childStyle = {
@@ -95,7 +95,7 @@ Console.Input = {
       background : 'transparent',
       font       : '400 13/16px monospace',
       whiteSpace : 'pre-wrap',
-      wordWrap   : 'break-word'
+      wordWrap   : 'break-word',
     };
 
     this.preStyle = JSON.parse(JSON.stringify(childStyle));
@@ -113,10 +113,9 @@ Console.Input = {
     this.textareaStyle.top       = '0';
     this.textareaStyle.left      = '0';
     this.textareaStyle.resize    = 'none';
-
   },
-  view: function(ctrl) {
-    return <div id="console-input" style={ ctrl.parentStyle }>
+  view : function(ctrl) {
+    return (<div id="console-input" style={ ctrl.parentStyle }>
               <pre style={ ctrl.preStyle }>
                 <span textContent={ ctrl.input() } ></span>
                 <br />
@@ -127,8 +126,8 @@ Console.Input = {
                 oninput={ m.withAttr('value', ctrl.input) }
                 onkeydown={ ctrl.exec.bind(ctrl) }>
               </textarea>
-           </div>
-  }
+            </div>);
+  },
 };
 
 m.mount(document.getElementById('console'), Console);
