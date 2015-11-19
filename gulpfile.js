@@ -4,14 +4,29 @@ var browserSync = require('browser-sync').create();
 var KarmaServer = require('karma').Server;
 
 var paths = {
-  js  : 'src/**/*.js',
-  src : 'src/**'
+  build : 'src/**/!(*spec).js',
+  js    : 'src/**/*.js',
+  src   : 'src/**'
 };
 
 var config = {
   eslint : 'config/eslint.conf',
   karma  : require('./config/karma.conf'),
 };
+
+
+gulp.task('build', 'Generate a build from sources', function() {
+  return gulp.src(paths.build)
+    .pipe($.plumber())
+    .pipe($.concat('mth-console.js'))
+    .pipe($.msx({ harmony: true }))
+    .pipe($.size({ title: 'mth-console.js', showFiles: true }))
+    .pipe(gulp.dest('dist/'))
+    .pipe($.uglify())
+    .pipe($.rename({ suffix: '.min' }))
+    .pipe($.size({ title: 'mth-console.min.js', showFiles: true }))
+    .pipe(gulp.dest('dist/'));
+});
 
 
 gulp.task('lint', 'Run eslint on javascript files', function() {
