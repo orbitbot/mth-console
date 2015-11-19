@@ -14,5 +14,13 @@
     <script src="model/Evaluator.js"></script>
     <script type="text/msx" src="components/Console.js"></script>
 
+    <script>
+    document.addEventListener('DOMContentLoaded',function() {
+      setTimeout(function() {
+        m.mount(document.getElementById('console'), Console);
+      }, 100);
+    })
+    </script>
+
   </body>
 </html>

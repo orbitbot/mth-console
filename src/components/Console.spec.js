@@ -1,0 +1,3 @@
+describe('Console component', function() {
+
+});
