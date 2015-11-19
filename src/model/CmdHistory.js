@@ -1,4 +1,4 @@
-Storage = function() {   // eslint-disable-line no-unused-vars
+CmdHistory = function() {   // eslint-disable-line no-unused-vars
   var contents = m.prop([]);
 
   this.get = contents;

@@ -7,7 +7,7 @@ var Console = {   // eslint-disable-line no-unused-vars
       return new Default;
     }
 
-    var history = getArgOrDefault('history', Storage);
+    var history = getArgOrDefault('history', CmdHistory);
     var evalImpl = getArgOrDefault('eval', Evaluator);
 
     return {
@@ -129,5 +129,3 @@ Console.Input = {
             </div>);
   },
 };
-
-m.mount(document.getElementById('console'), Console);
