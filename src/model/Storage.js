@@ -1,4 +1,4 @@
-var ConsoleStorage = function() {   // eslint-disable-line no-unused-vars
+Storage = function() {   // eslint-disable-line no-unused-vars
   var contents = m.prop([]);
 
   this.get = contents;

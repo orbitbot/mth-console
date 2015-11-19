@@ -7,7 +7,7 @@ var Console = {   // eslint-disable-line no-unused-vars
       return new Default;
     }
 
-    var history = getArgOrDefault('history', ConsoleStorage);
+    var history = getArgOrDefault('history', Storage);
     var evalImpl = getArgOrDefault('eval', Evaluator);
 
     return {
